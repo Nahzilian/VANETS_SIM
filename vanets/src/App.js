@@ -1,9 +1,12 @@
 import './App.css';
+import Map from './components/Map'
 
 function App() {
-  return (
-    <div>Something</div>
-  );
+	return (
+		<div className="wrapper">
+			<Map></Map>
+		</div>
+	);
 }
 
 export default App;

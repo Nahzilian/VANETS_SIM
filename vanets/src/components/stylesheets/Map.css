@@ -1,0 +1,24 @@
+.map-wrapper {
+    width: 100%;
+    display: flex;
+    /* grid-gap: 1px; */
+    /* flex-direction: row; */
+    column-gap: 0;
+    flex-wrap: wrap;
+    color: white;
+}
+
+.object-grid {
+    /* background-color: #09814A; */
+    width: 24px;
+    height: 24px;
+    border: 1px solid #293640;
+}
+
+.car {
+    background-color: #09814A;
+}
+
+.building {
+    background-color: #BCB382;
+}
