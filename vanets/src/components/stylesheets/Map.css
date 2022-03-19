@@ -22,3 +22,18 @@
 .building {
     background-color: #BCB382;
 }
+
+.marker {
+    width: 15px;
+    height: 15px;
+    border-radius: 100%;
+}
+
+.marker-radius {
+    width: 60px;
+    height: 60px;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

@@ -1,34 +1,107 @@
 import { useState, useEffect } from 'react'
+import GoogleMapReact from 'google-map-react'
+import { useInterval } from './hooks/useInterval';
+import { getDefaultData, } from './logic/createMap';
 import './stylesheets/Map.css'
-import { getMapSize, generateBuildings } from './logic/createMap'
-
-const ObjectGrid = ({ id, data }) => {
-    return (<div className={`object-grid ${data && data.class? data.class: ''}`}>{id}</div>)
-}
 
 
-const Map = () => {
-    
-    const [objectGrids, setObjectGrids] = useState([])
+const Marker = ({ color, callback = {} }) => {
 
-    useEffect(() => {
-        let temp = []
-        let mapSize = getMapSize()
-        
-        let buildingSets = generateBuildings(10, mapSize)
-        for (let i = 0; i < mapSize; i++) {
-            let tempData = {id: i}
-            if (buildingSets.has(i)) tempData.class="building"
-            temp.push(tempData)
-        }
-        setObjectGrids(temp)
-    }, [])
+
+    const markerStyle = {
+        backgroundColor: color
+    }
+
+    const markerRadiusStyle = {
+
+        backgroundColor: `${color}31`,
+        border: `1px solid ${color}`
+
+    }
 
     return (
-        <section className="map-wrapper">
+        <div className="marker-radius" onClick={() => callback()} style={markerRadiusStyle}>
+            <div className="marker" style={markerStyle}>
 
-            {objectGrids && objectGrids.length > 0 ? objectGrids.map((obj, key) => <ObjectGrid id={key} data={obj}/>) : ''}
+            </div>
+        </div>
+    )
+};
 
+const Map = () => {
+
+    const [markers, setMarkers] = useState()
+    let counter = 0
+
+    useEffect(() => {
+        async function fetchData() {
+            let data = await getDefaultData()
+            console.log(data)
+            setMarkers(data)
+        }
+        fetchData()
+    }, [])
+
+    const defaultProps = {
+        center: {
+            lat: 43.66,
+            lng: -79.38
+        },
+        zoom: 16,
+        // heading: 1
+    };
+
+    const recalculatePosition = () => {
+        if (counter + 1 < 10) {
+            setMarkers(prev => {
+
+                return prev.map((data) => {
+                    return {
+                        ...data,
+                        initLat: data.initLat + data.path[0].latSpeed,
+                        initLng: data.initLng + data.path[0].lngSpeed
+                    }
+                })
+            })
+
+            counter += 1
+        } else {
+            counter = 0
+        }
+
+
+
+    }
+
+    useInterval(() => {
+        if (markers) {
+            recalculatePosition()
+        }
+    }, [1000])
+
+
+    return (
+        <section className="map-wrapper" style={{ height: '100vh', width: '100%' }}>
+
+            <GoogleMapReact
+                bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_API_KEY }}
+                defaultCenter={defaultProps.center}
+                defaultZoom={defaultProps.zoom}
+
+            >
+                {markers && markers.length > 0 ? markers.map((val, index) =>
+                    <Marker
+                        key={index}
+                        lat={val.initLat}
+                        lng={val.initLng}
+                        color={val.color}
+                        callback={() => console.log("Yololll")}
+                    />
+                )
+                    : ""}
+
+
+            </GoogleMapReact>
 
 
         </section>);
