@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import GoogleMapReact from 'google-map-react'
 import { useInterval } from './hooks/useInterval';
 import { getDefaultData, } from './logic/createMap';
