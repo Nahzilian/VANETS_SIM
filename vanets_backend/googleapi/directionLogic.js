@@ -1,11 +1,15 @@
 const { Client } = require("@googlemaps/google-maps-services-js");
-const client = new Client({});
 var randomColor = require('randomcolor');
-
+const fs = require('fs')
 const defaultData = require('../assets/query.json')
+
+const client = new Client({});
+const STEPS = 1000
 
 require('dotenv').config()
 
+
+const tempCache = []
 const getDirection = ({origin, destination}) => {
     return client
     .directions({
@@ -32,38 +36,53 @@ const getRandomCoord = async () => {
     for (const item of defaultData) {
         let googleMapData = await getDirection(item)
         let path = []
-        let step = 10
+        
         for (let route of googleMapData.routes) {
-            let legs = route.legs.map((obj) => {
+            // let directionNode = {}
+            let steps = route.legs[0].steps
+        
+            let directionNodes = steps.map((obj) => {
                 return {
-                    start: obj.start_location,
-                    end: obj.end_location,
-                    latSpeed: (obj.start_location.lat - obj.end_location.lat) / step,
-                    lngSpeed: (obj.start_location.lng - obj.end_location.lng) / step,
-                    
+                    start : obj.start_location,
+                    end : obj.end_location,
+                    latSpeed : (obj.end_location.lat - obj.start_location.lat) / STEPS,
+                    lngSpeed : (obj.end_location.lng - obj.start_location.lng) / STEPS
                 }
             })
 
-            path = path.concat(legs)
-        }
 
+            path = path.concat(directionNodes)
+        }
         coords.push(path)
     }
     return coords
 }
 
 const getDefaultDirection = async () => {
+    // if (tempCache.length > 0) {
+    //     console.log(tempCache)
+    //     return tempCache
+    // }
+    
     let data = []
     let coordsData = await getRandomCoord()
+    let counter = 1
 
     for (let coord of coordsData) {
         
         data.push({
             color: randomColor(),
+            steps: STEPS,
             path: coord,
+            name: `car-${counter}`
         })
+        counter += 1
     }
 
+    // fs.writeFile('./test.json', JSON.stringify(data), err => {
+    //     if (err) 
+    //         console.error(err)
+    // })
     return data
 }
 

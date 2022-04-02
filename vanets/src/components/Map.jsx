@@ -3,6 +3,8 @@ import GoogleMapReact from 'google-map-react'
 import { useInterval } from './hooks/useInterval';
 import { getDefaultData, } from './logic/createMap';
 import './stylesheets/Map.css'
+import Direction from '../data/Direction'
+
 
 
 const Marker = ({ color, callback = {} }) => {
@@ -22,7 +24,7 @@ const Marker = ({ color, callback = {} }) => {
     return (
         <div className="marker-radius" onClick={() => callback()} style={markerRadiusStyle}>
             <div className="marker" style={markerStyle}>
-
+                {/* {text} */}
             </div>
         </div>
     )
@@ -31,13 +33,20 @@ const Marker = ({ color, callback = {} }) => {
 const Map = () => {
 
     const [markers, setMarkers] = useState()
-    let counter = 0
 
     useEffect(() => {
         async function fetchData() {
             let data = await getDefaultData()
-            console.log(data)
-            setMarkers(data)
+            // console.log(data)
+            let directionData = data.map((route) => {
+                return {
+                    direction: new Direction(route),
+                    color: route.color,
+                    name: route.name
+                }
+            })
+            // console.log(directionData)
+            setMarkers(directionData)
         }
         fetchData()
     }, [])
@@ -52,32 +61,24 @@ const Map = () => {
     };
 
     const recalculatePosition = () => {
-        if (counter + 1 < 10) {
-            setMarkers(prev => {
+        if (markers) {
+            let newPos = []
+            for (let marker of markers) {
+                let newMarker =
+                {
+                    direction: marker.direction.updatePath(),
+                    ...marker
+                }
+                newPos.push(newMarker)
+            }
 
-                return prev.map((data) => {
-                    return {
-                        ...data,
-                        initLat: data.initLat + data.path[0].latSpeed,
-                        initLng: data.initLng + data.path[0].lngSpeed
-                    }
-                })
-            })
-
-            counter += 1
-        } else {
-            counter = 0
+            setMarkers(newPos)
         }
-
-
-
     }
 
     useInterval(() => {
-        if (markers) {
-            recalculatePosition()
-        }
-    }, [1000])
+        recalculatePosition()
+    }, [5])
 
 
     return (
@@ -92,8 +93,8 @@ const Map = () => {
                 {markers && markers.length > 0 ? markers.map((val, index) =>
                     <Marker
                         key={index}
-                        lat={val.initLat}
-                        lng={val.initLng}
+                        lat={val.direction.currentLat}
+                        lng={val.direction.currentLng}
                         color={val.color}
                         callback={() => console.log("Yololll")}
                     />
