@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import GoogleMapReact from 'google-map-react'
 import { useInterval } from './hooks/useInterval';
-import { getDefaultData, } from './logic/createMap';
+import { isInRange } from './logic/createMap';
 import './stylesheets/Map.css'
-import Direction from '../data/Direction'
+// import Direction from '../data/Direction'
+// import Vehicle from '../data/Vehicle';
 
 
 
@@ -30,26 +31,9 @@ const Marker = ({ color, callback = {} }) => {
     )
 };
 
-const Map = () => {
+const Map = ({ loadedMarkers = [] }) => {
 
-    const [markers, setMarkers] = useState()
-
-    useEffect(() => {
-        async function fetchData() {
-            let data = await getDefaultData()
-            // console.log(data)
-            let directionData = data.map((route) => {
-                return {
-                    direction: new Direction(route),
-                    color: route.color,
-                    name: route.name
-                }
-            })
-            // console.log(directionData)
-            setMarkers(directionData)
-        }
-        fetchData()
-    }, [])
+    const [markers, setMarkers] = useState(loadedMarkers)
 
     const defaultProps = {
         center: {
@@ -76,9 +60,17 @@ const Map = () => {
         }
     }
 
+    const recalculateNetwork = () => {
+        // console.log(markers[0])
+        // console.log(markers[1])
+
+        // isInRange(markers[0].start, markers[1].start)
+    }
+
     useInterval(() => {
         recalculatePosition()
-    }, [5])
+        recalculateNetwork()
+    }, [1000])
 
 
     return (
@@ -88,24 +80,23 @@ const Map = () => {
                 bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_API_KEY }}
                 defaultCenter={defaultProps.center}
                 defaultZoom={defaultProps.zoom}
-
             >
-                {markers && markers.length > 0 ? markers.map((val, index) =>
-                    <Marker
-                        key={index}
-                        lat={val.direction.currentLat}
-                        lng={val.direction.currentLng}
-                        color={val.color}
-                        callback={() => console.log("Yololll")}
-                    />
-                )
-                    : ""}
+            {markers && markers.length > 0 ? markers.map((val, index) =>
+                <Marker
+                    key={index}
+                    lat={val.direction.currentLat}
+                    lng={val.direction.currentLng}
+                    color={val.color}
+                    callback={() => console.log(val.data)}
+                />
+            )
+                : ""}
 
 
-            </GoogleMapReact>
+        </GoogleMapReact>
 
 
-        </section>);
+        </section >);
 }
 
 export default Map;

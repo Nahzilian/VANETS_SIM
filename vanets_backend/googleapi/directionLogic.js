@@ -10,52 +10,53 @@ require('dotenv').config()
 
 
 const tempCache = []
-const getDirection = ({origin, destination}) => {
+const getDirection = ({ origin, destination }) => {
     return client
-    .directions({
-        params: {
-            origin: origin,
-            destination: destination,
-            key: process.env.API_KEY,
-            mode: 'DRIVING'
-        }
-    })
-    .then((r) => {
-        return r.data
-    })
-    .catch((e) => {
-        console.log(e.response.data.error_message);
-        return null
-    });
-    
+        .directions({
+            params: {
+                origin: origin,
+                destination: destination,
+                key: process.env.API_KEY,
+                mode: 'DRIVING'
+            }
+        })
+        .then((r) => {
+            return r.data
+        })
+        .catch((e) => {
+            console.log(e.response.data.error_message);
+            return null
+        });
+
 }
 
 
-const getRandomCoord = async () => {
-    let coords = []
-    for (const item of defaultData) {
-        let googleMapData = await getDirection(item)
-        let path = []
-        
-        for (let route of googleMapData.routes) {
-            // let directionNode = {}
-            let steps = route.legs[0].steps
-        
-            let directionNodes = steps.map((obj) => {
-                return {
-                    start : obj.start_location,
-                    end : obj.end_location,
-                    latSpeed : (obj.end_location.lat - obj.start_location.lat) / STEPS,
-                    lngSpeed : (obj.end_location.lng - obj.start_location.lng) / STEPS
-                }
-            })
+const getDefaultCoord = async (item) => {
+    // let coords = []
+    // for (const item of defaultData) {
+    let googleMapData = await getDirection(item)
+    let path = []
+
+    for (let route of googleMapData.routes) {
+        // let directionNode = {}
+        let steps = route.legs[0].steps
+
+        let directionNodes = steps.map((obj) => {
+            return {
+                start: obj.start_location,
+                end: obj.end_location,
+                latSpeed: (obj.end_location.lat - obj.start_location.lat) / STEPS,
+                lngSpeed: (obj.end_location.lng - obj.start_location.lng) / STEPS
+            }
+        })
 
 
-            path = path.concat(directionNodes)
-        }
-        coords.push(path)
+        path = path.concat(directionNodes)
     }
-    return coords
+    return path
+    //     coords.push(path)
+    // }
+    // return coords
 }
 
 const getDefaultDirection = async () => {
@@ -63,18 +64,21 @@ const getDefaultDirection = async () => {
     //     console.log(tempCache)
     //     return tempCache
     // }
-    
+
     let data = []
-    let coordsData = await getRandomCoord()
     let counter = 1
 
-    for (let coord of coordsData) {
-        
+    // for (let coord of coordsData) {
+
+    for (const item of defaultData) {
+        let coordsData = await getDefaultCoord(item)
         data.push({
-            color: randomColor(),
+            color: randomColor({luminosity: 'dark'}),
             steps: STEPS,
-            path: coord,
-            name: `car-${counter}`
+            path: coordsData,
+            name: `car-${counter}`,
+            origin: item.origin,
+            destination: item.destination
         })
         counter += 1
     }

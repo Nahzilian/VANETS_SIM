@@ -1,0 +1,118 @@
+.controller-wrapper {
+    width: 350px;
+    height: 100vh;
+    background-color: white;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    /* color: rgb(149, 149, 255); */
+}
+
+.controller-vehicle {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin: 20px; 
+    gap: 10px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgb(149, 149, 255);
+    overflow: auto;
+    flex: 1;
+}
+
+.controller-vehicle button{
+    width: 150px;
+    height: 40px;
+    background-color: white;
+    border: 1px solid rgb(149, 149, 255);
+    border-radius: 20px;
+    place-items: center;
+    transition: .5s;
+    font-weight: bold;
+    color: rgb(149, 149, 255);
+    /* min-height: min-content;
+    min-width: min-content; */
+}
+
+
+.controller-vehicle button:hover{
+    background-color:  rgb(149, 149, 255);
+    color: white;
+}
+
+.controller-data {
+    margin: 20px;
+    border-bottom: 1px solid rgb(149, 149, 255);
+}
+
+.data-item {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 183px auto 20px;
+
+    /* place-items: center; */
+    align-items: center;
+    align-content: center;
+    margin-bottom: 20px; 
+}
+
+.data-item .icon{
+    display: grid;
+    grid-template-columns: 30px auto;
+    align-items: center;
+    gap: 15px;
+    font-weight: bold;
+}
+
+.data-item .icon .bi{
+    font-size: 30px;
+}
+
+.location-data {
+    display: grid;
+    grid-template-columns: 30px auto;
+    font-weight: normal;
+    margin-bottom: 20px;
+    gap: 15px;
+    align-items: center; 
+    justify-items: start;
+}
+
+.controller-vehicle .active {
+    background-color:  rgb(149, 149, 255);
+    color: white;
+}
+
+.controller-vehicle .active:hover {
+    background-color:  rgb(95, 95, 242);
+    color: white;
+}
+
+.location-data i{
+    font-size: 30px;
+}
+
+.controller-title {
+    font-weight: bold;
+    font-size: 30px;
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+    padding: 20px 0;
+    color: rgb(149, 149, 255);
+    text-transform: uppercase;
+}
+.section-title{
+    color: rgb(149, 149, 255);
+    margin: 20px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    display: grid;
+    grid-template-columns: auto 20px;
+    place-items: center;
+}
+
+.car-color {
+    width: 20px;
+    height: 20px;
+}

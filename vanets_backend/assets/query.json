@@ -1,22 +1,22 @@
 [
     {
-        "origin":"306+Sherbourne+St+Toronto",
-        "destination":"399+Yonge+St+Toronto"
+        "origin":"306 Sherbourne St Toronto",
+        "destination":"399 Yonge St Toronto"
     },
     {
-        "origin":"399+Yonge+St+Toronto",
-        "destination":"Sly+Sarkisova+Clinical+Supervision+Consulting+and+Psychotherapy+Church+St+and+Maitland+St+Toronto"
+        "origin":"399 Yonge St Toronto",
+        "destination":"Sly Sarkisova Clinical Supervision Consulting and Psychotherapy Church St and Maitland St Toronto"
     },
     {
-        "origin":"Bay+St+at+College+St+Toronto",
-        "destination":"Downtown+Toronto+Toronto"
+        "origin":"Bay St at College St Toronto",
+        "destination":"Downtown Toronto Toronto"
     },
     {
-        "origin":"Parking+lot+512+Church+St+Toronto",
-        "destination":"Sherbourne+St+at+Shuter+St+Toronto+ON"
+        "origin":"Parking lot 512 Church St Toronto",
+        "destination":"Sherbourne St at Shuter St Toronto ON"
     },
     {
-        "origin":"University+Ave+at+Gerrard+St+West+Toronto+ON",
-        "destination":"Gerrard+St+East+at+Sackville+St+Toronto"
+        "origin":"University Ave at Gerrard St West Toronto ON",
+        "destination":"Gerrard St East at Sackville St Toronto"
     }
 ]
