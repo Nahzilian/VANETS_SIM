@@ -1,11 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import GoogleMapReact from 'google-map-react'
 import { useInterval } from './hooks/useInterval';
 import { isInRange } from './logic/createMap';
 import './stylesheets/Map.css'
-// import Direction from '../data/Direction'
-// import Vehicle from '../data/Vehicle';
-
 
 
 const Marker = ({ color, callback = {} }) => {
@@ -31,7 +28,7 @@ const Marker = ({ color, callback = {} }) => {
     )
 };
 
-const Map = ({ loadedMarkers = [] }) => {
+const Map = ({ setContactChecker ,loadedMarkers = [], contactChecker }) => {
 
     const [markers, setMarkers] = useState(loadedMarkers)
 
@@ -61,16 +58,37 @@ const Map = ({ loadedMarkers = [] }) => {
     }
 
     const recalculateNetwork = () => {
-        // console.log(markers[0])
-        // console.log(markers[1])
+        // Tabulation approach
 
-        // isInRange(markers[0].start, markers[1].start)
+        for (let i = 0; i < markers.length; i++) {
+            let currentMarker = markers[i]
+            for (let j = i + 1; j < markers.length; j++) {
+                let nextMarker = markers[j]
+
+                let start = {
+                    lat: currentMarker.direction.currentLat,
+                    lng: currentMarker.direction.currentLng
+                }
+                let end = {
+                    lat: nextMarker.direction.currentLat,
+                    lng: nextMarker.direction.currentLng
+                }
+
+                // madeContact.push(isContacted)
+                let newCheckerData = [...contactChecker]
+                if (isInRange(start, end)) {
+                    newCheckerData[i][j-1] = nextMarker
+                    newCheckerData[j][i] = currentMarker
+                    setContactChecker(newCheckerData)
+                }
+            }
+        }
     }
 
     useInterval(() => {
         recalculatePosition()
         recalculateNetwork()
-    }, [1000])
+    }, [200])
 
 
     return (
@@ -81,19 +99,19 @@ const Map = ({ loadedMarkers = [] }) => {
                 defaultCenter={defaultProps.center}
                 defaultZoom={defaultProps.zoom}
             >
-            {markers && markers.length > 0 ? markers.map((val, index) =>
-                <Marker
-                    key={index}
-                    lat={val.direction.currentLat}
-                    lng={val.direction.currentLng}
-                    color={val.color}
-                    callback={() => console.log(val.data)}
-                />
-            )
-                : ""}
+                {markers && markers.length > 0 ? markers.map((val, index) =>
+                    <Marker
+                        key={index}
+                        lat={val.direction.currentLat}
+                        lng={val.direction.currentLng}
+                        color={val.color}
+                        callback={() => console.log(val.data)}
+                    />
+                )
+                    : ""}
 
 
-        </GoogleMapReact>
+            </GoogleMapReact>
 
 
         </section >);

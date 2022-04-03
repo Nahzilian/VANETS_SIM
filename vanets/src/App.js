@@ -8,6 +8,7 @@ import Vehicle from './data/Vehicle';
 
 function App() {
 	const [markers, setMarkers] = useState()
+	const [contactChecker, setContactChecker] = useState([])
 
 	useEffect(() => {
 		async function fetchData() {
@@ -24,16 +25,25 @@ function App() {
 				}
 			})
 			console.log(directionData)
+			for (let i = 0; i < directionData.length; i++) {
+				let tempArr = new Array(directionData.length - 1).fill({})
+				setContactChecker(prev => {
+					prev.push(tempArr)
+					return prev
+				})
+			}
 			setMarkers(directionData)
 		}
 		fetchData()
 	}, [])
+
+	
 	return (
 		<div className="wrapper">
-			{markers && markers.length > 0 ?
+			{markers && markers.length > 0 && contactChecker.length > 0?
 				<>
-					<Controller data={markers}></Controller>
-					<Map loadedMarkers={markers} />
+					<Controller data={markers} inRange={contactChecker}></Controller>
+					<Map loadedMarkers={markers} setContactChecker={setContactChecker} contactChecker={contactChecker} />
 				</>
 				: ""}
 		</div>

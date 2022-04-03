@@ -116,3 +116,32 @@
     width: 20px;
     height: 20px;
 }
+
+.in-range-data {
+    height: 180px;
+    overflow-y: auto;
+}
+
+.in-range-item {
+    margin: 20px;
+    /* width: 100%; */
+    min-height: 120px;
+    border: 1px solid rgb(149, 149, 255);
+    
+}
+
+.in-range-data-wrapper {
+    width: 100%;
+    padding: 20px 0px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 20px);
+    place-items: center;
+}
+
+.data-title {
+    color: rgb(95, 95, 242);
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    padding: 10px 20px;
+}

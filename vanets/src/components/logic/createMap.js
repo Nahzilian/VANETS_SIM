@@ -44,6 +44,5 @@ const calculateRange = (start, end) => {
 
 export const isInRange = (start, end) => {
     let calculatedRange = calculateRange(start, end)
-    console.log(calculatedRange)
-    return true
+    return 0.001 > calculatedRange
 }

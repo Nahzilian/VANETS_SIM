@@ -4,7 +4,7 @@ const fs = require('fs')
 const defaultData = require('../assets/query.json')
 
 const client = new Client({});
-const STEPS = 1000
+const STEPS = 100
 
 require('dotenv').config()
 

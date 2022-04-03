@@ -17,7 +17,28 @@ const DataItem = ({ icon, data, unit, label = "Label" }) => {
     </div>)
 }
 
-const Controller = ({ data }) => {
+const InRangeDataItem = ({ data }) => {
+    if (data && data.color)
+    return (<div className="in-range-item">
+        <div className="data-title">
+            {data.data.name}
+        </div>
+        <div className="in-range-data-wrapper">
+            <div><i className='bi bi-thermometer-half'></i> &#8451;</div>
+            <div><i className='bi bi-cloud'></i></div>
+            <div><i className='bi bi-exclamation-triangle-fill'></i></div>
+            <div><i className='bi bi-calendar-check'></i></div>
+            <div>{data.data.commonData.temperature}</div>
+            <div>{data.data.commonData.weather}</div>
+            <div>{data.data.commonData.isTrafficJam ? "Crowded" : "Clear"}</div>
+            <div>{data.data.commonData.isLatest ? "Yes" : "No"}</div>
+        </div>
+    </div>)
+
+    return <></>
+}
+
+const Controller = ({ data, inRange }) => {
 
     // weather: '',
     //     temperature: '',
@@ -28,11 +49,17 @@ const Controller = ({ data }) => {
     const [currentCar, setCurrentCar] = useState(data[0])
     // const [network, setNetwork] = useState()
     const [selectedIndex, setSelectedIndex] = useState(0)
+    const [inRangeData, setInRangeData] = useState(inRange)
+    // const [currentInRangeData, setCurrentInRangeData] = useState()
 
     const selectCar = (index) => {
         setSelectedIndex(index)
         setCurrentCar(carData[index])
     }
+
+    useEffect(() => {
+        setInRangeData(inRange)
+    }, [inRange])
 
     return (<div className="controller-wrapper">
         <div className="controller-title">
@@ -54,7 +81,7 @@ const Controller = ({ data }) => {
         </div>
         <div className="section-title">
             <div>Car data</div>
-            <div className="car-color" style={{backgroundColor: currentCar.color}}></div>
+            <div className="car-color" style={{ backgroundColor: currentCar.color }}></div>
         </div>
         <div className="controller-data">
             <div className="location-data">
@@ -81,6 +108,13 @@ const Controller = ({ data }) => {
             <DataItem icon={'bi-calendar-check'} data={currentCar.data.isLatest ? "Yes" : "No"} unit={''} label={'Latest info'} />
         </div>
         <div className="section-title">Captured data</div>
+        <div className="in-range-data">
+            {inRangeData && inRangeData.length > 0 ?
+                inRangeData[selectedIndex].map((d, key) =>
+                    < InRangeDataItem data={d} key={key} />
+                ): ""}
+
+        </div>
 
     </div >);
 }
